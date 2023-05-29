@@ -2,12 +2,12 @@
 name = "Flask-Cassandra"
 version = "0.1.4"
 description = ""
-authors = ["Konstantin Hantsov <hantsov@iconik.io>"]
+authors = ["Kostiantyn Hantsov <hantsov@iconik.io>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-Flask = "^2.3.2"
-cassandra-driver = "^3.27.0"
+Flask = "^2"
+cassandra-driver = "^3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
