@@ -34,11 +34,15 @@ except NameError:  # Python3
     unicode = str
 
 
+_NOT_SET = object()
+
+
 class CassandraCluster(object):
 
-    def __init__(self, app=None):
+    def __init__(self, app=None, protocol_version=_NOT_SET):
         self.app = app
         self.cluster = None
+        self.protocol_version = protocol_version
         if app is not None:
             self.init_app(app)
 
@@ -53,9 +57,14 @@ class CassandraCluster(object):
         log.debug("Connecting to CASSANDRA NODES {}".format(current_app.config['CASSANDRA_NODES']))
         if self.cluster is None:
             if isinstance(current_app.config['CASSANDRA_NODES'], (list, tuple)):
-                self.cluster = Cluster(current_app.config['CASSANDRA_NODES'])
+                self.cluster = Cluster(
+                    current_app.config['CASSANDRA_NODES'], protocol_version=self.protocol_version,
+                )
             elif isinstance(current_app.config['CASSANDRA_NODES'], (str, unicode)):
-                self.cluster = Cluster([current_app.config['CASSANDRA_NODES']])
+                self.cluster = Cluster(
+                    [current_app.config['CASSANDRA_NODES']],
+                    protocol_version=self.protocol_version,
+                )
             else:
                 raise TypeError("CASSANDRA_NODES must be defined as a list, tuple, string, or unicode object.")
 
