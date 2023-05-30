@@ -9,7 +9,7 @@
     :copyright: (c) 2015 by Terbium Labs.
     :license: BSD, see LICENSE for more details.
 '''
-__version_info__ = ('0', '1', '4')
+__version_info__ = ('0', '1', '7')
 __version__ = '.'.join(__version_info__)
 __author__ = 'Michael Moore'
 __license__ = 'BSD'
@@ -34,12 +34,9 @@ except NameError:  # Python3
     unicode = str
 
 
-_NOT_SET = object()
-
-
 class CassandraCluster(object):
 
-    def __init__(self, app=None, protocol_version=_NOT_SET):
+    def __init__(self, app=None, protocol_version=4):
         self.app = app
         self.cluster = None
         self.protocol_version = protocol_version
