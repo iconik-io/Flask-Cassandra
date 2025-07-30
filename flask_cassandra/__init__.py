@@ -9,7 +9,7 @@
     :copyright: (c) 2015 by Terbium Labs.
     :license: BSD, see LICENSE for more details.
 '''
-__version_info__ = ('0', '1', '7')
+__version_info__ = ('0', '1', '8')
 __version__ = '.'.join(__version_info__)
 __author__ = 'Michael Moore'
 __license__ = 'BSD'
