@@ -9,7 +9,7 @@
     :copyright: (c) 2015 by Terbium Labs.
     :license: BSD, see LICENSE for more details.
 '''
-__version_info__ = ('0', '1', '8')
+__version_info__ = ('0', '1', '9')
 __version__ = '.'.join(__version_info__)
 __author__ = 'Michael Moore'
 __license__ = 'BSD'
@@ -18,14 +18,9 @@ __copyright__ = '(c) 2015 by TerbiumLabs'
 from cassandra.cluster import Cluster
 import logging
 
-from flask import current_app
+from flask import current_app, g, has_app_context
 
 log = logging.getLogger(__name__)
-
-try:
-    from flask import _app_ctx_stack as stack
-except ImportError:
-    from flask import _request_ctx_stack as stack
 
 
 try:
@@ -69,14 +64,14 @@ class CassandraCluster(object):
         return online_cluster
 
     def teardown(self, exception):
-        ctx = stack.top
-        if hasattr(ctx, 'cassandra_cluster'):
-            ctx.cassandra_cluster.shutdown()
+        if has_app_context():
+            cluster = g.pop('cassandra_cluster', None)
+            if cluster is not None:
+                cluster.shutdown()
 
     @property
     def connection(self):
-        ctx = stack.top
-        if ctx is not None:
-            if not hasattr(ctx, 'cassandra_cluster'):
-                ctx.cassandra_cluster = self.connect()
-            return ctx.cassandra_cluster
+        if has_app_context():
+            if 'cassandra_cluster' not in g:
+                g.cassandra_cluster = self.connect()
+            return g.cassandra_cluster
